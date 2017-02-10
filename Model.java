@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 class Model {
+/*
   boolean game_lost, no_energy, fall_ending, collision_ending;
   boolean collisionKnockback = true;
   int tubeCounter, damageDelay;
@@ -12,8 +13,17 @@ class Model {
   Hand hand;
   Random random;
   LinkedList<Tube> tubes;
+*/
+  int addTubeWhenZero;
+
+  Bird bird;
+  Tube tube;
+  Random random;
+  LinkedList<Sprites> sprites;
+
 
   Model() {
+/*
     game_lost = false;
     no_energy = false;
     fall_ending = false;
@@ -21,14 +31,48 @@ class Model {
     tubeCounter = 0;
     damageDelay = 0;
 
-    bird = new Bird();
+    bird = new Bird(this);
     random = new Random();
     tube = new Tube(random);
     hand = new Hand(bird);
     cloud = new Cloud(random);
     tubes = new LinkedList<Tube>();
+*/
+  random = new Random(420);
+  bird = new Bird(this);
+  sprites = new LinkedList<Sprites>();
+  sprites.add(bird);
+  tube = new Tube();
+  sprites.add(t);
+
   }
 
+  // Update the world model
+  public void update() {
+
+    // Update each item in the list of world entities
+    Iterator<Sprite> it = sprites.iterator();
+    while(it.hasNext()) {
+      Sprite s = it.next();
+      if(s.update()) {
+        it.remove();
+      }
+
+      // If enough time has passed, and we don't have too many tubes,
+      // add one and reset the timer
+      if(addTubeWhenZero <= 0 && maximumTubes < 4) {
+        Tube t = new Tube(random);
+        sprites.add(t);
+        addTubeWhenZero = 45;
+        System.out.println("ADDED A NEW TUBE");
+      }
+    }
+    --addTubeWhenZero;
+
+
+  }
+
+/*
   public void update() {
 
     // Manage Game State
@@ -92,6 +136,7 @@ class Model {
     }
 
   }
+*/
 
   public void onClick() {
     bird.flap();

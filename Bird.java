@@ -8,10 +8,17 @@ class Bird {
   boolean flapped;
   double gravity;
   int x_pos, y_pos, flapCounter, energy;
+
+  Model model;
+
   static Image bird_image_up = null;
   static Image bird_image_down = null;
 
-  Bird() {
+  // Return false because a "Bird" isn't a "Tube"
+  public boolean isTube() { return false; }
+
+  Bird(Model m) {
+    model = m;
     x_pos = 10;
     y_pos = 250;
     energy = 100;
@@ -24,6 +31,18 @@ class Bird {
       e.printStackTrace(System.err);
       System.exit(1);
     }
+  }
+
+  // Check each item in the sprites list to see if it is a tube
+  public boolean loseEnergy() {
+    Iterator it;
+    while(it.hasNext()) {
+      if(isTube())
+        return true;
+      it.next();
+    }
+    return false;
+
   }
 
   public void flap() {

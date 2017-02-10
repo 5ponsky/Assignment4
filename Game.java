@@ -13,7 +13,6 @@ public class Game extends JFrame
 		model = new Model();
 		Controller controller = new Controller(model);
 		view = new View(controller, model);
-		//this.setTitle("Turtle Attack!");
 		this.setSize(500, 500);
 		this.getContentPane().add(view);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +22,7 @@ public class Game extends JFrame
 	public void run() {
 		while(true) {
 			model.update();
-			view.repaint(); // Indirectly calls View.paintComponent?
+			view.repaint(); // Implicitly calls View.paintComponent
 
 			// Sleep 50ms
 			try {

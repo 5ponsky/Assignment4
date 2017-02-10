@@ -13,6 +13,9 @@ class Tube {
   static Image tube_down_image = null;
   static Image tube_up_image = null;
 
+  // Return true because a "Tube" is a "Tube"
+  public boolean isTube() { return true; }
+
   Tube(Random r) {
     random = r;
     x_pos = 555;

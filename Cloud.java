@@ -10,6 +10,9 @@ class Cloud {
   Random random;
   static Image cloud_image = null;
 
+  // Return false because a "Cloud" isn't a "Tube"
+  public boolean isTube() { return false; }
+
   Cloud(Random r) {
     random = r;
     x_pos = 575;

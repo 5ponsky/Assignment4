@@ -12,6 +12,9 @@ class Hand {
   static Image open_hand = null;
   static Image closed_hand = null;
 
+  // Return false because a "Hand" isn't a "Tube"
+  public boolean isTube() { return false; }
+
   Hand(Bird b) {
     bird = b;
     gotcha = false;

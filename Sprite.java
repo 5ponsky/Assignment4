@@ -2,9 +2,16 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 // Scratch Work
-class Sprite {
+abstract class Sprite {
   static Image im;
   int x_pos, y_pos;
+
+  // Return true if the object is of type "Tube"
+  abstract boolean isTube();
+
+  // Update the various components and properties of the object
+  asbsract void update();
+
 
 
   public void setImage(Image im) {
