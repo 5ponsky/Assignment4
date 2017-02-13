@@ -7,6 +7,7 @@ public class Game extends JFrame
 {
 	Model model;
 	View view;
+	int frameCounter;
 
 	public Game()
 	{
@@ -32,7 +33,7 @@ public class Game extends JFrame
 				System.exit(1);
 			}
 
-			System.out.println("Running");
+			System.out.println("running...");
 		}
 	}
 

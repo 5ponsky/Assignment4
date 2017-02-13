@@ -1,13 +1,15 @@
-import java.awt.Image;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Iterator;
+import javax.imageio.ImageIO;
 
-class Bird {
+class Bird extends Sprite {
   boolean flapped;
   double gravity;
-  int x_pos, y_pos, flapCounter, energy;
+  int x_pos, y_pos, flapCounter, energy, allowDamageWhenZero;
 
   Model model;
 
@@ -17,74 +19,108 @@ class Bird {
   // Return false because a "Bird" isn't a "Tube"
   public boolean isTube() { return false; }
 
+  // Return x_pos or y_pos
+  public int xPos() { return x_pos; }
+  public int yPos() { return y_pos; }
+
+  // Return Image dimensions
+  public int ImageW() { return bird_image_up.getWidth(null); }
+  public int ImageH() { return bird_image_up.getHeight(null); }
+
+  // Not needed atm
+  public boolean beenHit(double xVel) { return false; }
+
   Bird(Model m) {
     model = m;
     x_pos = 10;
     y_pos = 250;
+    gravity = -6.5;
     energy = 100;
+
+    setPos(x_pos, y_pos);
 
     // Only load the sprites if they exist and an instance is created
     try {
-      this.bird_image_up = ImageIO.read(new File("bird1.png"));
-      this.bird_image_down = ImageIO.read(new File("bird2.png"));
+      if(bird_image_up == null)
+        this.bird_image_up = ImageIO.read(new File("bird1.png"));
+      if(bird_image_down == null)
+        this.bird_image_down = ImageIO.read(new File("bird2.png"));
     } catch(Exception e) {
       e.printStackTrace(System.err);
       System.exit(1);
     }
   }
 
+  // Update the bird
+  public boolean update() {
+
+    // Allow the bird to recharge energy so long as it has more than 0,
+    // and cap the energy at 100
+    if(energy > 0) {
+      energy += 1;
+
+      gravity = gravity + 0.4;
+      y_pos = y_pos + (int) gravity;
+      --flapCounter;
+
+      if(loseEnergy() && allowDamageWhenZero <= 0) {
+        energy = energy - 65;
+        allowDamageWhenZero = 25;
+      }
+      --allowDamageWhenZero;
+
+      // Keep the energy levels from going out of bounds
+      if(energy > 100)
+        energy = 100;
+      } else if (energy < 0)
+        energy = 0;
+
+      // Simulate a game "ceiling"
+      if(y_pos < 0) {
+        y_pos = 0;
+        gravity = 0;
+      }
+
+    return false;
+  }
+
+  // Make the bird fly
+  public void flap() {
+    if(energy > 0) {
+      gravity = gravity - 4.5;
+      y_pos = y_pos - (int) gravity;
+      flapCounter = 3;
+    } else
+      energy = 0;
+  }
+
   // Check each item in the sprites list to see if it is a tube
   public boolean loseEnergy() {
-    Iterator it;
+    Iterator<Sprite> it = model.sprites.iterator();
     while(it.hasNext()) {
-      if(isTube())
-        return true;
-      it.next();
+      Sprite s = it.next();
+
+      if(s.isTube()) {
+        if(collided(this, s))
+            return true;
+      }
     }
     return false;
 
   }
 
-  public void flap() {
-    if(energy > 0) {
-      gravity = gravity - 2.5;
-      y_pos = y_pos - (int) gravity;
-      flapCounter = 3;
-      //energy = energy - 35;
-    } else
-      energy = 0;
+  public boolean collided(Sprite a, Sprite b) {
+    if(collisionDetected(a.xPos(), a.yPos(), a.ImageW(), a.ImageH(),
+                        b.xPos(), b.yPos(), b.ImageW(), b.ImageH() ) )
+                          return true;
+    return false;
   }
 
-  public void update() {
-
-    // Allow the bird to recharge energy so long as it has more than 0,
-    // and cap the energy at 100
-    if(energy > 0) {
-
-      // Simulate gravity and bird flapping
-      gravity = gravity + 0.3;
-      y_pos = y_pos + (int) gravity;
-      --flapCounter;
-
-
-      energy += 1;
-      if(energy > 100)
-        energy = 100;
-    } else if (energy < 0)
-      energy = 0; // Cosmetic effect to keep the bar from drawing backwards
-
+  public void drawYourself(Graphics g) {
+    if(flapCounter <= 0)
+      g.drawImage(this.bird_image_up, this.x_pos, this.y_pos, null);
+    else
+      g.drawImage(this.bird_image_down, this.x_pos, this.y_pos, null);
   }
-
-/*
-  public void animateCollision(boolean knockback) {
-
-    // Knock the bird backwards and upwards, indicating a "bump"
-    energy = 0;
-    if(knockback)
-      gravity = gravity - 4.5;
-    y_pos = y_pos + (int) gravity;
-    x_pos = x_pos - 2;
-  }
-*/
 
 }

@@ -1,8 +1,9 @@
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.Robot;
+import javax.swing.SwingUtilities;
 
 class Controller implements ActionListener, MouseListener
 {
@@ -25,7 +26,10 @@ class Controller implements ActionListener, MouseListener
 	}
 
 	public void mousePressed(MouseEvent e) {
-		model.onClick();
+		if(SwingUtilities.isRightMouseButton(e))
+			model.sendChuck();
+		else
+			model.onClick();
 	}
 
 	public void mouseReleased(MouseEvent e) {

@@ -28,30 +28,12 @@ class View extends JPanel
 		g.setColor(new Color(128, 255, 255));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		// Draw a cloud_image
-		g.drawImage(model.cloud.cloud_image, model.cloud.x_pos, model.cloud.y_pos, null);
-
-		// Draw bird wings up or down
-		if(model.bird.flapCounter <= 0)
-			g.drawImage(model.bird.bird_image_up, model.bird.x_pos, model.bird.y_pos, null);
-		else
-			g.drawImage(model.bird.bird_image_down, model.bird.x_pos, model.bird.y_pos, null);
-
 		// Draw either up or down sprite
-		Iterator<Tube> i = model.tubes.iterator();
-		while(i.hasNext()) {
-			//model.i.next().drawTube(g);
-			Tube t = i.next();
-			t.drawTube(g);
+		Iterator<Sprite> it = model.sprites.iterator();
+		while(it.hasNext()) {
+			Sprite s = it.next();
+			s.drawYourself(g);
 		}
-
-
-
-		// Draw the skeleton hand
-		if(model.hand.gotcha)
-			g.drawImage(model.hand.closed_hand, model.hand.x_pos, model.hand.y_pos, null);
-		else
-			g.drawImage(model.hand.open_hand, model.hand.x_pos, model.hand.y_pos, null);
 
 		// Draw energy bar
 		g.setColor(new Color(0, 255, 0));
