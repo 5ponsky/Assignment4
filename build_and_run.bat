@@ -1,1 +1,1 @@
-javac Game.java Controller.java View.java Model.java Bird.java Tube.java Cloud.java Hand.java -Xdiags:verbose
+javac Game.java Controller.java View.java Model.java Sprite.java Bird.java Chuck.java Tube.java Cloud.java Hand.java -Xdiags:verbose
